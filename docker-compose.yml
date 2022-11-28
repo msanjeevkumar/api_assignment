@@ -10,18 +10,23 @@ services:
     ports:
       - "54323:5432"
     volumes:
-      - ~/dev_db:/var/lib/postgresql/dev_db
-#  api-assignment:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    image: api-assignment:1.0
-#    ports:
-#      - "4000:4000"
-#    command: bash -c 'while !</dev/tcp/dev_db/5432; do sleep 1; done; npm start'
-#    links:
-#      - dev_db
-#    environment:
+      - ~/dev_db:/var/lib/dev_db
+  api-assignment:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: api-assignment:1.0
+    ports:
+      - "3000:3000"
+    command: bash -c 'while !</dev/tcp/dev_db/5432; do sleep 1; done; npm start'
+    links:
+      - dev_db
+    environment:
 #      - DB_CONNECTION_STRING=postgres://dev_user:Password123@dev_db:5432/dev_db
-#    depends_on:
-#      - dev_db
+      - DATABASE_HOST=dev_db
+      - DATABASE_PORT=5432
+      - DATABASE_USER=dev_user
+      - DATABASE_NAME=dev_db
+      - PORT=3000
+    depends_on:
+      - dev_db
