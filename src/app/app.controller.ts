@@ -1,6 +1,7 @@
-import { Controller, Get, Post } from '@nestjs/common';
-import { AppService } from './app.service';
-import { ConfigService } from '@nestjs/config';
+import { Body, Controller, Get, Post } from "@nestjs/common";
+import { AppService } from "./app.service";
+import { ConfigService } from "@nestjs/config";
+import { UserDto } from "./user.dto";
 
 @Controller()
 export class AppController {
@@ -15,12 +16,12 @@ export class AppController {
   }
 
   @Post('/v1/users')
-  createUser(username: string, password: string) {
-    return this.appService.createUser(username, password);
+  async createUser(@Body() body: UserDto): Promise<void> {
+    await this.appService.createUser(body.username, body.password);
   }
 
   @Post('/v1/login')
-  login(username: string, password: string) {
-    return this.appService.login(username, password);
+  login(@Body() body: UserDto): Promise<string> {
+    return this.appService.login(body.username, body.password);
   }
 }
